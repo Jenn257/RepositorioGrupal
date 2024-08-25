@@ -1,5 +1,5 @@
 package co.edu.uniquindio;
 
-interface Contribuyente {
-    void contribuir();
+public interface Contribuyente {
+    String contribuir();
 }

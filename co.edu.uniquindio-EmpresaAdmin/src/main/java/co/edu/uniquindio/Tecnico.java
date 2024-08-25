@@ -18,16 +18,19 @@ public class Tecnico extends Empleado {
     }
 
     @Override
-    public void contribuir() {
-        realizarTareasTecnicas();
-        resolverProblemas();
+    public String contribuir() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Técnico ").append(getNombre()).append(" (ID: ").append(getIdEmpleado()).append(") está contribuyendo con:\n");
+        sb.append(realizarTareasTecnicas()).append("\n");
+        sb.append(resolverProblemas()).append("\n");
+        return sb.toString();
     }
 
-    private void realizarTareasTecnicas() {
-        System.out.println("Realizando tareas técnicas en la especialidad de " + especialidad);
+    private String realizarTareasTecnicas() {
+        return "  ** Realizando tareas técnicas en la especialidad de " + especialidad;
     }
 
-    private void resolverProblemas() {
-        System.out.println("Resolviendo problemas");
+    private String resolverProblemas() {
+        return "  ** Resolviendo problemas";
     }
 }

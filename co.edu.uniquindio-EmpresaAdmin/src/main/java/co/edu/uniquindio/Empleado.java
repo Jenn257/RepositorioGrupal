@@ -36,6 +36,7 @@ public class Empleado implements Contribuyente {
     }
 
     @Override
-    public void contribuir() {
+    public String contribuir() {
+        return "Contribución general del empleado ";
     }
 }

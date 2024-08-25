@@ -1,62 +1,119 @@
 package co.edu.uniquindio;
 
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
-
     public static void main(String[] args) {
-        // Crear un departamento
-        Departamento depto = new Departamento("Desarrollo de Software", "D001");
-
-        // Crear empleados
-        Empleado emp1 = new Empleado("Juan Pérez", "E001", depto);
-        Empleado emp2 = new Empleado("Ana Gómez", "E002", depto);
+        // Crear departamentos
+        Departamento deptoIT = new Departamento("Tecnologías de la Información", "D01");
+        Departamento deptoHR = new Departamento("Recursos Humanos", "D02");
 
         // Crear proyectos
-        Proyecto proj1 = new Proyecto("Proyecto Alpha", "P001");
-        Proyecto proj2 = new Proyecto("Proyecto Beta", "P002");
+        Proyecto proyectoDesarrollo = new Proyecto("Desarrollo de Aplicación", "P001");
+        Proyecto proyectoInfraestructura = new Proyecto("Infraestructura de Red", "P002");
+        Proyecto proyectoMantenimiento = new Proyecto("Mantenimiento de Sistemas", "P003");
 
-        // Crear gerente
-        Gerente gerente = new Gerente("Carlos Martínez", "G001", depto);
-        gerente.setNivelGerencia("Senior");
+        // Crear empleados (Gerente y Técnico)
+        Gerente gerenteIT = new Gerente("Juan Pérez", "G01", deptoIT, 5);
+        Tecnico tecnicoDev = new Tecnico("Ana López", "T01", deptoIT, "Desarrolladora");
+        Tecnico tecnicoAdmin = new Tecnico("Luis Gómez", "T02", deptoHR, "Administrador de Sistemas");
 
-        // Crear técnico
-        Tecnico tecnico = new Tecnico("Luis Fernández", "T001", depto, "Desarrollo Web");
+        // Asignar empleados a los departamentos
+        deptoIT.agregarEmpleado(gerenteIT);
+        deptoIT.agregarEmpleado(tecnicoDev);
+        deptoHR.agregarEmpleado(tecnicoAdmin);
 
-        // Agregar empleados al departamento
-        depto.agregarEmpleado(emp1);
-        depto.agregarEmpleado(emp2);
+        // Asignar empleados a los proyectos
+        proyectoDesarrollo.asignarEmpleado(gerenteIT);
+        proyectoDesarrollo.asignarEmpleado(tecnicoDev);
 
-        // Asignar empleados a proyectos
-        proj1.asignarEmpleado(emp1);
-        proj2.asignarEmpleado(emp2);
+        proyectoInfraestructura.asignarEmpleado(gerenteIT);
+        proyectoInfraestructura.asignarEmpleado(tecnicoAdmin);
 
-        // Agregar proyectos al gerente
-        gerente.agregarProyecto(proj1);
-        gerente.agregarProyecto(proj2);
+        proyectoMantenimiento.asignarEmpleado(tecnicoDev);
 
-        // Agregar empleados al equipo bajo gestión del gerente
-        gerente.agregarEmpleado(emp1);
-        gerente.agregarEmpleado(emp2);
+        // Agregar proyectos gestionados por el gerente
+        gerenteIT.agregarProyecto(proyectoDesarrollo);
+        gerenteIT.agregarProyecto(proyectoInfraestructura);
 
-        // Ejecutar contribuciones
-        System.out.println("Contribuciones del Gerente:");
-        gerente.contribuir();
+        // Mostrar los departamentos y sus empleados
+        mostrarEmpleados("Departamento Tecnologías de la Información:", deptoIT);
+        mostrarEmpleados("Departamento Recursos Humanos:", deptoHR);
 
-        System.out.println("\nContribuciones del Técnico:");
-        tecnico.contribuir();
+        // Ejercicio 1: Determinar en cuántos proyectos están involucrados todos los empleados
+        Map<String, Integer> empleadoProyectosCount = contarProyectosPorEmpleados(
+                proyectoDesarrollo, proyectoInfraestructura, proyectoMantenimiento);
+        StringBuilder sbEmpleadoProyectos = new StringBuilder("Número de proyectos en los que están involucrados los empleados:\n");
+        for (Map.Entry<String, Integer> entry : empleadoProyectosCount.entrySet()) {
+            sbEmpleadoProyectos.append(entry.getKey()).append(" está involucrado en ").append(entry.getValue()).append(" proyectos.\n");
+        }
+        JOptionPane.showMessageDialog(null, sbEmpleadoProyectos.toString());
 
-        // Mostrar empleados del departamento
-        System.out.println("\nEmpleados en el Departamento:");
-        for (Empleado emp : depto.getEmpleados()) {
-            System.out.println(" - " + emp.getNombre() + " (" + emp.getIdEmpleado() + ")");
+        // Ejercicio 2: Generar reporte de contribuciones
+        StringBuilder sbContribuciones = new StringBuilder("Reporte de Contribuciones:\n");
+        for (Proyecto proyecto : new Proyecto[]{proyectoDesarrollo, proyectoInfraestructura, proyectoMantenimiento}) {
+            for (Empleado emp : proyecto.getEmpleadosAsignados()) {
+                sbContribuciones.append("    Contribución: ").append(emp.contribuir()).append("\n");
+            }
+        }
+        JOptionPane.showMessageDialog(null, sbContribuciones.toString());
+
+        // Ejercicio 3: Seleccionar un departamento y eliminar un empleado
+        String[] opciones = {"Tecnologías de la Información", "Recursos Humanos"};
+        String departamentoSeleccionado = (String) JOptionPane.showInputDialog(null, "Selecciona el departamento del cual deseas eliminar un empleado:",
+                "Eliminar Empleado", JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+
+        Departamento departamentoAEliminar = departamentoSeleccionado.equals("IT") ? deptoIT : deptoHR;
+        String empleadoAEliminar = JOptionPane.showInputDialog("Ingrese el nombre del empleado a eliminar del departamento " + departamentoSeleccionado + ":");
+
+        if (empleadoAEliminar != null && !empleadoAEliminar.isEmpty()) {
+            eliminarEmpleado(departamentoAEliminar, empleadoAEliminar);
+            mostrarEmpleados("Departamento Tecnologías de la Información después de la remoción:", deptoIT);
+            mostrarEmpleados("Departamento Recursos Humanos después de la remoción:", deptoHR);
+        } else {
+            JOptionPane.showMessageDialog(null, "Nombre de empleado no válido.");
+        }
+    }
+
+    private static void mostrarEmpleados(String mensaje, Departamento departamento) {
+        StringBuilder sb = new StringBuilder(mensaje + "\n");
+        for (Empleado emp : departamento.getEmpleados()) {
+            sb.append(emp.getNombre()).append(" (ID: ").append(emp.getIdEmpleado()).append(")\n");
+        }
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+
+    private static Map<String, Integer> contarProyectosPorEmpleados(Proyecto... proyectos) {
+        Map<String, Integer> empleadoProyectosCount = new HashMap<>();
+
+        for (Proyecto proyecto : proyectos) {
+            for (Empleado empleado : proyecto.getEmpleadosAsignados()) {
+                empleadoProyectosCount.put(empleado.getNombre(),
+                        empleadoProyectosCount.getOrDefault(empleado.getNombre(), 0) + 1);
+            }
         }
 
-        // Mostrar proyectos y sus empleados asignados
-        System.out.println("\nEmpleados asignados a proyectos:");
-        for (Proyecto proyecto : new Proyecto[]{proj1, proj2}) {
-            System.out.println("Proyecto: " + proyecto.getNombre());
-            for (Empleado empleado : proyecto.getEmpleadosAsignados()) {
-                System.out.println(" - " + empleado.getNombre() + " (" + empleado.getIdEmpleado() + ")");
+        return empleadoProyectosCount;
+    }
+
+    private static void eliminarEmpleado(Departamento departamento, String nombre) {
+        Empleado empleadoAEliminar = null;
+        for (Empleado emp : departamento.getEmpleados()) {
+            if (emp.getNombre().equalsIgnoreCase(nombre)) {
+                empleadoAEliminar = emp;
+                break;
             }
+        }
+
+        if (empleadoAEliminar != null) {
+            // Eliminar el empleado del departamento
+            departamento.eliminarEmpleado(empleadoAEliminar);
+
+            JOptionPane.showMessageDialog(null, "Empleado " + nombre + " eliminado exitosamente del departamento.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Empleado " + nombre + " no encontrado en el departamento.");
         }
     }
 }
