@@ -1,4 +1,5 @@
 package co.edu.uniquindio;
 
-public class Contribuyente {
+interface Contribuyente {
+    void contribuir();
 }
