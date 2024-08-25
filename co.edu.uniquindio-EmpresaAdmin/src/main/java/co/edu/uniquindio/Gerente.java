@@ -10,8 +10,8 @@ public class Gerente extends Empleado{
     public Gerente(String nombre, String idEmpleado, Departamento departamento) {
         super (nombre, idEmpleado, departamento);
         this.nivelGerencia = nivelGerencia;
-        this.equipoBajoGestion = equipoBajoGestion;
-        this.proyectosGestionados = proyectosGestionados;
+        this.equipoBajoGestion = new LinkedList<>();
+        this.proyectosGestionados = new LinkedList <>();
     }
 
     public String getNivelGerencia() {

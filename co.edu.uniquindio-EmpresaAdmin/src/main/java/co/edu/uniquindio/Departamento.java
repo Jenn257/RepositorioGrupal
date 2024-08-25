@@ -10,7 +10,7 @@ public class Departamento {
     public Departamento (String nombre, String codigo) {
         this.nombre = nombre;
         this.codigo = codigo;
-        empleados = new LinkedList();
+        empleados = new LinkedList<>();
     }
 
     public String getNombre() {
