@@ -4,7 +4,16 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * La clase Main contiene el punto de entrada del programa y métodos para gestionar departamentos,
+ * proyectos y empleados. Incluye funciones para mostrar empleados, contar proyectos por empleados, y eliminar empleados.
+ */
 public class Main {
+    /**
+     * El método principal que sirve como punto de entrada del programa.
+     * @param args los argumentos.
+     */
+
     public static void main(String[] args) {
         // Crear departamentos
         Departamento deptoIT = new Departamento("Tecnologías de la Información", "D01");
@@ -77,6 +86,11 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra los empleados de un departamento específico en un cuadro de diálogo.
+     * @param mensaje el mensaje que describe el departamento.
+     * @param departamento el departamento del cual se mostrarán los empleados.
+     */
     private static void mostrarEmpleados(String mensaje, Departamento departamento) {
         StringBuilder sb = new StringBuilder(mensaje + "\n");
         for (Empleado emp : departamento.getEmpleados()) {
@@ -85,6 +99,11 @@ public class Main {
         JOptionPane.showMessageDialog(null, sb.toString());
     }
 
+    /**
+     * Cuenta el número de proyectos en los que cada empleado está involucrado.
+     * @param proyectos una lista de proyectos a evaluar.
+     * @return un mapa que asocia el nombre de cada empleado con el número de proyectos en los que está involucrado.
+     */
     private static Map<String, Integer> contarProyectosPorEmpleados(Proyecto... proyectos) {
         Map<String, Integer> empleadoProyectosCount = new HashMap<>();
 
@@ -98,6 +117,11 @@ public class Main {
         return empleadoProyectosCount;
     }
 
+    /**
+     * Elimina un empleado de un departamento específico si se encuentra en él.
+     * @param departamento el departamento del cual se eliminará el empleado.
+     * @param nombre el nombre del empleado a eliminar.
+     */
     private static void eliminarEmpleado(Departamento departamento, String nombre) {
         Empleado empleadoAEliminar = null;
         for (Empleado emp : departamento.getEmpleados()) {
