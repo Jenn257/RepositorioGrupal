@@ -1,3 +1,9 @@
+/**
+ * Clase que representa el Main.
+ * @author Mateo Garrido Rios y Jennifer Andrea Cortés Chavarro.
+ * @since 2024.
+ */
+
 package co.edu.uniquindio;
 
 import javax.swing.*;
